@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Тайна старого театра</title>
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3/dist/phaser.min.js"></script>
+  <style>body { margin: 0; }</style>
+</head>
+<body>
+
+<script>
+const config = {
+  type: Phaser.AUTO,
+  width: 800,
+  height: 600,
+  backgroundColor: '#000',
+  scene: {
+    preload: preload,
+    create: create,
+    update: update
+  }
+};
+
+let cluesFound = 0;
+let activeDialog = null;
+
+const game = new Phaser.Game(config);
+
+function preload() {
+  // Загрузи свой фон здесь. Пример:
+  this.load.image('background', 'theater.jpg');
+  
+  // Если нет файла — используй временную ссылку (заменить на свою позже):
+  //this.load.image('background', 'https://s.iimg.su/s/29/gnH7IEJxO2DeUfgOkqOhhIPuhYbarzsFLKu2z0VV.jpg');
+}
+
+function create() {
+  // Фон
+  this.add.image(400, 300, 'background').setDisplaySize(800, 600);
+
+  // Улики: [x, y, radius, текст]
+  const clues = [
+    [400, 400, 30, '🎭 Маска: Следы помады. Но Артём — мужчина.'],
+    [600, 450, 25, '☕ Чашка: Тёплая. Пролита недавно.'],
+    [200, 450, 25, '📜 Записка: Бумага с гербом театра... только у режиссёра.'],
+    [700, 300, 20, '🎫 Билет: Место 13. Спектакль отменили...'],
+    [100, 300, 20, '🔑 Ключ: От подвала. Недавно использован.']
+  ];
+
+  // Создаём кликабельные зоны
+  clues.forEach(clue => {
+    let zone = this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2).setInteractive({ cursor: 'pointer' });
+    zone.on('pointerdown', () => {
+      if (!activeDialog) {
+        showText(this, clue[3]);
+      }
+    });
+  });
+
+  // Кнопки персонажей (внизу)
+  const chars = [
+    { x: 200, name: 'Людмила', text: '«Я не видела Артёма после второго акта. Он ушёл домой.»' },
+    { x: 400, name: 'Борис', text: '«Я весь вечер в кабинете. Ничего не слышал.»' },
+    { x: 600, name: 'Степан', text: '«Я мыл пол за кулисами. Слышал крик… но подумал — репетиция.»' }
+  ];
+
+  chars.forEach(char => {
+    let btn = this.add.text(char.x, 550, char.name, {
+      fontSize: '20px',
+      fill: '#fff',
+      backgroundColor: '#333',
+      padding: { x: 10, y: 5 }
+    }).setInteractive({ cursor: 'pointer' });
+    
+    btn.on('pointerdown', () => {
+      if (!activeDialog) {
+        showText(this, `${char.name}: ${char.text}`);
+      }
+    });
+  });
+
+  // Инструкция
+  this.add.text(16, 16, 'Кликайте по объектам и персонажам', { fill: '#fff' });
+}
+
+function showText(scene, text) {
+  if (activeDialog) return;
+  
+  activeDialog = scene.add.text(400, 100, text, {
+    fontSize: '22px',
+    fill: '#fff',
+    backgroundColor: '#000000cc',
+    padding: { x: 15, y: 10 },
+    wordWrap: { width: 600 }
+  }).setOrigin(0.5);
+  
+  // Закрыть через 5 сек или по клику
+  scene.input.once('pointerdown', () => {
+    activeDialog.destroy();
+    activeDialog = null;
+  });
+  
+  scene.time.delayedCall(5000, () => {
+    if (activeDialog) {
+      activeDialog.destroy();
+      activeDialog = null;
+    }
+  });
+}
+
+function update() {}
+</script>
+
+</body>
+</html>
