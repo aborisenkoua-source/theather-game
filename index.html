@@ -16,22 +16,16 @@ const config = {
   backgroundColor: '#000',
   scene: {
     preload: preload,
-    create: create,
-    update: update
+    create: create
   }
 };
 
-let cluesFound = 0;
 let activeDialog = null;
 
 const game = new Phaser.Game(config);
 
 function preload() {
-  // Загрузи свой фон здесь. Пример:
   this.load.image('background', 'theater.jpg');
-  
-  // Если нет файла — используй временную ссылку (заменить на свою позже):
-  //this.load.image('background', 'https://s.iimg.su/s/29/gnH7IEJxO2DeUfgOkqOhhIPuhYbarzsFLKu2z0VV.jpg');
 }
 
 function create() {
@@ -49,15 +43,17 @@ function create() {
 
   // Создаём кликабельные зоны
   clues.forEach(clue => {
-    let zone = this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2).setInteractive({ cursor: 'pointer' });
-    zone.on('pointerdown', () => {
-      if (!activeDialog) {
+    let zone = this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2)
+      .setInteractive({ cursor: 'pointer' })
+      .on('pointerover', () => this.canvas.style.cursor = 'pointer')
+      .on('pointerout', () => this.canvas.style.cursor = 'default')
+      .on('pointerdown', () => {
+        if (activeDialog) return;
         showText(this, clue[3]);
-      }
-    });
+      });
   });
 
-  // Кнопки персонажей (внизу)
+  // Кнопки персонажей
   const chars = [
     { x: 200, name: 'Людмила', text: '«Я не видела Артёма после второго акта. Он ушёл домой.»' },
     { x: 400, name: 'Борис', text: '«Я весь вечер в кабинете. Ничего не слышал.»' },
@@ -67,49 +63,53 @@ function create() {
   chars.forEach(char => {
     let btn = this.add.text(char.x, 550, char.name, {
       fontSize: '20px',
-      fill: '#fff',
-      backgroundColor: '#333',
-      padding: { x: 10, y: 5 }
-    }).setInteractive({ cursor: 'pointer' });
+      fill: '#ffcc00', // яркий цвет, чтобы видно было
+      backgroundColor: '#000000aa',
+      padding: { x: 12, y: 8 },
+      align: 'center'
+    }).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
     
+    btn.on('pointerover', () => this.canvas.style.cursor = 'pointer');
+    btn.on('pointerout', () => this.canvas.style.cursor = 'default');
     btn.on('pointerdown', () => {
-      if (!activeDialog) {
-        showText(this, `${char.name}: ${char.text}`);
-      }
+      if (activeDialog) return;
+      showText(this, `${char.name}: ${char.text}`);
     });
   });
 
   // Инструкция
-  this.add.text(16, 16, 'Кликайте по объектам и персонажам', { fill: '#fff' });
+  this.add.text(400, 30, 'Кликните по объектам или персонажам', {
+    fontSize: '22px',
+    fill: '#ffffff',
+    align: 'center'
+  }).setOrigin(0.5);
 }
 
 function showText(scene, text) {
-  if (activeDialog) return;
-  
-  activeDialog = scene.add.text(400, 100, text, {
-    fontSize: '22px',
-    fill: '#fff',
-    backgroundColor: '#000000cc',
-    padding: { x: 15, y: 10 },
-    wordWrap: { width: 600 }
-  }).setOrigin(0.5);
-  
-  // Закрыть через 5 сек или по клику
-  scene.input.once('pointerdown', () => {
+  // Удаляем старый диалог, если есть
+  if (activeDialog) {
     activeDialog.destroy();
-    activeDialog = null;
-  });
-  
-  scene.time.delayedCall(5000, () => {
+  }
+
+  activeDialog = scene.add.text(400, 120, text, {
+    fontSize: '22px',
+    fill: '#ffffff',
+    backgroundColor: '#000000cc',
+    padding: { x: 16, y: 12 },
+    wordWrap: { width: 650 },
+    align: 'center'
+  }).setOrigin(0.5);
+
+  // Закрыть по клику
+  scene.input.once('pointerdown', () => {
     if (activeDialog) {
       activeDialog.destroy();
       activeDialog = null;
     }
   });
 }
-
-function update() {}
 </script>
 
 </body>
+
 </html>
