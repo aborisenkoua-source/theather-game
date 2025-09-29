@@ -41,15 +41,14 @@ function create() {
     [100, 300, 20, '🔑 Ключ: От подвала. Недавно использован.']
   ];
 
-  // Создаём кликабельные зоны
+  // Создаём кликабельные зоны — БЕЗ ручного управления курсором!
   clues.forEach(clue => {
-    let zone = this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2)
+    this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2)
       .setInteractive({ cursor: 'pointer' })
-      .on('pointerover', () => this.canvas.style.cursor = 'pointer')
-      .on('pointerout', () => this.canvas.style.cursor = 'default')
       .on('pointerdown', () => {
-        if (activeDialog) return;
-        showText(this, clue[3]);
+        if (!activeDialog) {
+          showText(this, clue[3]);
+        }
       });
   });
 
@@ -61,36 +60,29 @@ function create() {
   ];
 
   chars.forEach(char => {
-    let btn = this.add.text(char.x, 550, char.name, {
+    this.add.text(char.x, 550, char.name, {
       fontSize: '20px',
-      fill: '#ffcc00', // яркий цвет, чтобы видно было
+      fill: '#ffcc00',
       backgroundColor: '#000000aa',
-      padding: { x: 12, y: 8 },
-      align: 'center'
-    }).setOrigin(0.5).setInteractive({ cursor: 'pointer' });
-    
-    btn.on('pointerover', () => this.canvas.style.cursor = 'pointer');
-    btn.on('pointerout', () => this.canvas.style.cursor = 'default');
-    btn.on('pointerdown', () => {
-      if (activeDialog) return;
-      showText(this, `${char.name}: ${char.text}`);
+      padding: { x: 12, y: 8 }
+    })
+    .setOrigin(0.5)
+    .setInteractive({ cursor: 'pointer' })
+    .on('pointerdown', () => {
+      if (!activeDialog) {
+        showText(this, `${char.name}: ${char.text}`);
+      }
     });
   });
 
   // Инструкция
   this.add.text(400, 30, 'Кликните по объектам или персонажам', {
     fontSize: '22px',
-    fill: '#ffffff',
-    align: 'center'
+    fill: '#ffffff'
   }).setOrigin(0.5);
 }
 
 function showText(scene, text) {
-  // Удаляем старый диалог, если есть
-  if (activeDialog) {
-    activeDialog.destroy();
-  }
-
   activeDialog = scene.add.text(400, 120, text, {
     fontSize: '22px',
     fill: '#ffffff',
@@ -113,3 +105,4 @@ function showText(scene, text) {
 </body>
 
 </html>
+
