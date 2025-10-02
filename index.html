@@ -24,12 +24,19 @@ let activeDialog = null;
 
 const game = new Phaser.Game(config);
 
-/*function preload() {
+function preload() {
   this.load.image('background', 'theater.jpg');
 }
 
 function create() {
   // Фон
+  //this.add.image(400, 300, 'background').setDisplaySize(800, 600);
+   // 🔴 МАЯЧОК: если видишь этот текст — create() запустился
+  this.add.text(400, 50, '✅ СЦЕНА ЗАГРУЖЕНА!', {
+    fontSize: '24px',
+    fill: '#00ff00'
+  }).setOrigin(0.5);
+
   this.add.image(400, 300, 'background').setDisplaySize(800, 600);
 
   // Улики: [x, y, radius, текст]
@@ -50,28 +57,8 @@ function create() {
           showText(this, clue[3]);
         }
       });
-  });*/
+  });
 
-function preload() {
-  // Ничего не грузим
-}
-
-function create() {
-  this.add.text(400, 50, 'ТЕСТ: кликабельные зоны работают?', {
-    fontSize: '24px',
-    fill: '#ffffff'
-  }).setOrigin(0.5);
-
-  // Одна тестовая зона
-  this.add.zone(400, 300, 100, 100)
-    .setInteractive({ cursor: 'pointer' })
-    .on('pointerdown', () => {
-      if (!activeDialog) {
-        showText(this, 'РАБОТАЕТ!');
-      }
-    });
-
-  // Остальной код (персонажи и т.д.) можно временно закомментировать
 }
   
   // Кнопки персонажей
@@ -127,5 +114,6 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
