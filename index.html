@@ -13,13 +13,14 @@
   </style>
 </head>
 <body>
-
+<div id="game-container" style="margin: 20px auto; width: 1800px;"></div>
 <script>
 const config = {
   type: Phaser.AUTO,
-  width: 800,
-  height: 600,
-  backgroundColor: '#000',
+  width: 1800,
+  height: 900,
+  backgroundColor: '#1a1a1a', // тёмная рамка вокруг
+  parent: 'game-container',   // ← важно!
   scene: {
     preload: preload,
     create: create
@@ -151,6 +152,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
