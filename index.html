@@ -25,10 +25,32 @@ let activeDialog = null;
 const game = new Phaser.Game(config);
 
 function preload() {
-  this.load.image('background', 'theater.jpg');
+  //this.load.image('background', 'theater.jpg');
 }
 
 function create() {
+  this.add.text(400, 50, '✅ СЦЕНА ЗАГРУЖЕНА (без фона)!', {
+    fontSize: '24px',
+    fill: '#00ff00'
+  }).setOrigin(0.5);
+
+  // Одна тестовая зона
+  this.add.zone(400, 300, 100, 100)
+    .setInteractive({ cursor: 'pointer' })
+    .on('pointerdown', () => {
+      this.add.text(400, 200, 'РАБОТАЕТ!', {
+        fontSize: '32px',
+        fill: '#ffff00'
+      }).setOrigin(0.5);
+    });
+
+  this.add.text(400, 400, 'Кликни в центр', {
+    fontSize: '20px',
+    fill: '#ffffff'
+  }).setOrigin(0.5);
+}
+  
+/*function create() {
 // Проверяем, загрузилась ли текстура
   if (!this.textures.exists('background')) {
     this.add.text(400, 300, '❌ ОШИБКА: фон не загружен!', {
@@ -94,7 +116,7 @@ function create() {
     fontSize: '22px',
     fill: '#ffffff'
   }).setOrigin(0.5);
-}
+}*/
 
 function showText(scene, text) {
   activeDialog = scene.add.text(400, 120, text, {
@@ -119,6 +141,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
