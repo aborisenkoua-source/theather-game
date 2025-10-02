@@ -69,7 +69,7 @@ function create() {
     sprite.displayHeight = clue[2] * 2;
     
     // Делаем невидимым, но интерактивным
-    sprite.alpha = 0; // полностью прозрачный
+    //sprite.alpha = 0; // полностью прозрачный
     sprite.setInteractive({ cursor: 'pointer' });
     
     // Обработчик клика
@@ -80,8 +80,8 @@ function create() {
     
     // 🔴 ВРЕМЕННО: для отладки — убери alpha=0 и добавь цвет
     // sprite.clearTint();
-    // sprite.setTint(0xff0000);
-    // sprite.alpha = 0.3;
+    sprite.setTint(0xff0000);
+    sprite.alpha = 0.3;
   });
 
   // Кнопки персонажей
@@ -136,6 +136,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
