@@ -32,6 +32,13 @@ const game = new Phaser.Game(config);
 
 function preload() {
   this.load.image('background', 'theater.jpg');
+  
+  // Создаём 1x1 прозрачную текстуру для невидимых спрайтов
+  let transparentPixel = this.textures.createCanvas('pixel', 1, 1);
+  let ctx = transparentPixel.getContext('2d');
+  ctx.fillStyle = '#000000';
+  ctx.fillRect(0, 0, 1, 1);
+  transparentPixel.refresh();
 }
 
   
@@ -55,7 +62,7 @@ function create() {
   // Создаём НЕВИДИМЫЕ спрайты вместо зон
   clues.forEach(clue => {
     // Создаём спрайт с "пустой" текстурой
-    let sprite = this.add.sprite(clue[0], clue[1], '__MISSING');
+    let sprite = this.add.sprite(clue[0], clue[1], 'pixel');
     
     // Задаём размер (диаметр = 2 * радиус)
     sprite.displayWidth = clue[2] * 2;
@@ -129,6 +136,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
