@@ -36,12 +36,14 @@ function preload() {
 
   
 function create() {
+  activeDialog = null;
+
   // Фон — отправляем на задний план
   this.add.image(400, 300, 'background')
     .setDisplaySize(800, 600)
     .setDepth(-1);
 
-  // Улики
+  // Улики: [x, y, radius, текст]
   const clues = [
     [400, 400, 30, '🎭 Маска: Следы помады. Но Артём — мужчина.'],
     [600, 450, 25, '☕ Чашка: Тёплая. Пролита недавно.'],
@@ -50,17 +52,32 @@ function create() {
     [100, 300, 20, '🔑 Ключ: От подвала. Недавно использован.']
   ];
 
+  // Создаём НЕВИДИМЫЕ спрайты вместо зон
   clues.forEach(clue => {
-    this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2)
-      .setInteractive({ cursor: 'pointer' })
-      .on('pointerdown', () => {
-        showText(this, clue[3]);
-      });
-     // Временно: покажем зону
-     this.add.rectangle(clue[0], clue[1], clue[2]*2, clue[2]*2, 0xff0000, 0.3);
+    // Создаём спрайт с "пустой" текстурой
+    let sprite = this.add.sprite(clue[0], clue[1], '__MISSING');
+    
+    // Задаём размер (диаметр = 2 * радиус)
+    sprite.displayWidth = clue[2] * 2;
+    sprite.displayHeight = clue[2] * 2;
+    
+    // Делаем невидимым, но интерактивным
+    sprite.alpha = 0; // полностью прозрачный
+    sprite.setInteractive({ cursor: 'pointer' });
+    
+    // Обработчик клика
+    sprite.on('pointerdown', () => {
+      console.log('Клик по улике:', clue[3]);
+      showText(this, clue[3]);
+    });
+    
+    // 🔴 ВРЕМЕННО: для отладки — убери alpha=0 и добавь цвет
+    // sprite.clearTint();
+    // sprite.setTint(0xff0000);
+    // sprite.alpha = 0.3;
   });
 
-  // Персонажи
+  // Кнопки персонажей
   const chars = [
     { x: 200, name: 'Людмила', text: '«Я не видела Артёма после второго акта. Он ушёл домой.»' },
     { x: 400, name: 'Борис', text: '«Я весь вечер в кабинете. Ничего не слышал.»' },
@@ -68,7 +85,7 @@ function create() {
   ];
 
   chars.forEach(char => {
-    this.add.text(char.x, 550, char.name, {
+    let btn = this.add.text(char.x, 550, char.name, {
       fontSize: '20px',
       fill: '#ffcc00',
       backgroundColor: '#000000aa',
@@ -77,21 +94,16 @@ function create() {
     .setOrigin(0.5)
     .setInteractive({ cursor: 'pointer' })
     .on('pointerdown', () => {
-      if (!activeDialog) {
-        showText(this, `${char.name}: ${char.text}`);
-      }
+      console.log('Клик по персонажу:', char.name);
+      showText(this, `${char.name}: ${char.text}`);
     });
   });
 
+  // Инструкция
   this.add.text(400, 30, 'Кликните по объектам или персонажам', {
     fontSize: '22px',
     fill: '#ffffff'
   }).setOrigin(0.5);
-
-// Отладка: ловим любой клик по сцене
-this.input.on('pointerdown', (pointer) => {
-  console.log('Клик в сцену:', pointer.x, pointer.y);
-});
 }
 
 function showText(scene, text) {
@@ -117,6 +129,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
