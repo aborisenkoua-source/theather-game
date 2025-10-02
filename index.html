@@ -29,9 +29,15 @@ function preload() {
 }
 
 function create() {
-  // Фон
-  //this.add.image(400, 300, 'background').setDisplaySize(800, 600);
-   // 🔴 МАЯЧОК: если видишь этот текст — create() запустился
+// Проверяем, загрузилась ли текстура
+  if (!this.textures.exists('background')) {
+    this.add.text(400, 300, '❌ ОШИБКА: фон не загружен!', {
+      fontSize: '24px',
+      fill: '#ff0000'
+    }).setOrigin(0.5);
+    return;
+  }
+
   this.add.text(400, 50, '✅ СЦЕНА ЗАГРУЖЕНА!', {
     fontSize: '24px',
     fill: '#00ff00'
@@ -113,6 +119,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
