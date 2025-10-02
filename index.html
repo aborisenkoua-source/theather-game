@@ -81,6 +81,11 @@ function create() {
     fontSize: '22px',
     fill: '#ffffff'
   }).setOrigin(0.5);
+
+// Отладка: ловим любой клик по сцене
+this.input.on('pointerdown', (pointer) => {
+  console.log('Клик в сцену:', pointer.x, pointer.y);
+});
 }
 
 function showText(scene, text) {
@@ -106,6 +111,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
