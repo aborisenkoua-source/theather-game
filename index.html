@@ -52,6 +52,8 @@ function create() {
           showText(this, clue[3]);
         }
       });
+     // Временно: покажем зону
+     this.add.rectangle(clue[0], clue[1], clue[2]*2, clue[2]*2, 0xff0000, 0.3);
   });
 
   // Персонажи
@@ -106,6 +108,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
