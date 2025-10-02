@@ -30,7 +30,6 @@ function preload() {
 
   
 function create() {
-  activeDialog = null; // ← гарантируем, что диалог закрыт
   // Фон — отправляем на задний план
   this.add.image(400, 300, 'background')
     .setDisplaySize(800, 600)
@@ -49,9 +48,7 @@ function create() {
     this.add.zone(clue[0], clue[1], clue[2]*2, clue[2]*2)
       .setInteractive({ cursor: 'pointer' })
       .on('pointerdown', () => {
-        if (!activeDialog) {
-          showText(this, clue[3]);
-        }
+        showText(this, clue[3]);
       });
      // Временно: покажем зону
      this.add.rectangle(clue[0], clue[1], clue[2]*2, clue[2]*2, 0xff0000, 0.3);
@@ -109,6 +106,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
