@@ -114,6 +114,12 @@ function create() {
 }
 
 function showText(scene, text) {
+  // Удаляем старый диалог
+  if (activeDialog) {
+    activeDialog.destroy();
+  }
+
+  // Создаём новый
   activeDialog = scene.add.text(400, 120, text, {
     fontSize: '22px',
     fill: '#ffffff',
@@ -123,8 +129,17 @@ function showText(scene, text) {
     align: 'center'
   }).setOrigin(0.5);
 
-  // Закрыть по клику
-  scene.input.once('pointerdown', () => {
+  // Вариант 1: закрыть через 5 секунд
+  scene.time.delayedCall(5000, () => {
+    if (activeDialog) {
+      activeDialog.destroy();
+      activeDialog = null;
+    }
+  });
+
+  // Вариант 2: закрыть по клику НА САМОМ ДИАЛОГЕ
+  activeDialog.setInteractive({ cursor: 'pointer' });
+  activeDialog.on('pointerdown', () => {
     if (activeDialog) {
       activeDialog.destroy();
       activeDialog = null;
@@ -136,6 +151,7 @@ function showText(scene, text) {
 </body>
 
 </html>
+
 
 
 
